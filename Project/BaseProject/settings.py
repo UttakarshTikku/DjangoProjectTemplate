@@ -115,6 +115,11 @@ class Common(Configuration):
     # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
     STATIC_URL = '/static/'
+    PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, 'static_cdn'),
+    ]
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static_cdn', 'static_root')
 
 class Develop(Common):
     DEBUG = True

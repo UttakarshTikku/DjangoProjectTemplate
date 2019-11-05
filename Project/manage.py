@@ -11,7 +11,7 @@ def main():
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'BaseProject.settings')
     os.environ.setdefault('DJANGO_CONFIGURATION', 'Production')
     from django.core.management.commands.runserver import Command as runserver
-    runserver.default_port = os.environ['APPLICATION_PORT']
+    runserver.default_port = os.environ['APPLICATION_HTTP_PORT']
     
     from configurations.management import execute_from_command_line
     

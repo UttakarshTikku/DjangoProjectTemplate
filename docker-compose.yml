@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  web:
+    build: .
+    networks:
+      - django_network
+    command: bash -c "cd Project && python manage.py collectstatic --no-input && python manage.py makemigrations && python manage.py migrate && gunicorn --workers=BaseProject.wsgi -b 0.0.0.0:80"
+    volumes:
+      - .:/code/
+
+  nginx:
+    image: nginx
+    restart: always
+    networks: 
+      - django_network
+    env_file: Project/.env
+    volumes:
+      - ./Project/config/nginx/conf.d:/etc/nginx/conf.d
+      - ./Project/config/nginx/default.d:/etc/nginx/default.d
+      - ./Project/config/certs/nginx:/etc/ssl/
+      - ./Project/static_cdn/static_root/:/static/
+    ports:
+      - "9447:80"
+      - "9449:443"
+    links:
+      - web
+
+networks:
+  django_network:
+    driver: bridge
