@@ -3,10 +3,10 @@ version: '3'
 services:
   web:
     build: .
-    env_file: Project/project.env
     networks:
       - django_network
-    command: bash -c "cd Project && python manage.py collectstatic --no-input && python manage.py makemigrations && python manage.py migrate && gunicorn --workers=BaseProject.wsgi -b 0.0.0.0:80"
+    env_file: Project/project.env
+    command: bash -c "cd Project && python manage.py collectstatic --no-input && python manage.py makemigrations && python manage.py migrate && gunicorn --workers=3 BaseProject.wsgi -b 0.0.0.0:80"
     volumes:
       - .:/code/
 
@@ -23,8 +23,7 @@ services:
       - ./Project/static_cdn/static_root/:/static/
     ports:
       - "9447:80"
-      - "9449:443"
-    depends_on:
+    links:
       - web
 
 networks:
