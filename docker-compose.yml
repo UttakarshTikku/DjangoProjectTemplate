@@ -3,6 +3,7 @@ version: '3'
 services:
   web:
     build: .
+    env_file: Project/project.env
     networks:
       - django_network
     command: bash -c "cd Project && python manage.py collectstatic --no-input && python manage.py makemigrations && python manage.py migrate && gunicorn --workers=BaseProject.wsgi -b 0.0.0.0:80"
@@ -14,7 +15,7 @@ services:
     restart: always
     networks: 
       - django_network
-    env_file: Project/.env
+    env_file: Project/project.env
     volumes:
       - ./Project/config/nginx/conf.d:/etc/nginx/conf.d
       - ./Project/config/nginx/default.d:/etc/nginx/default.d
@@ -23,7 +24,7 @@ services:
     ports:
       - "9447:80"
       - "9449:443"
-    links:
+    depends_on:
       - web
 
 networks:
